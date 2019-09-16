@@ -1,7 +1,6 @@
 const stripe = require('../util/stripe'),
   { StripeCustomer, CustomerSubscription } = require('../models');
 
-// Need stripe customer_id to create invoices and verify that I can add school
 exports.addPaymentMethod = (request, response) => {
   const { source, description, email } = request.body // GET Token
 
@@ -45,8 +44,6 @@ exports.addSubscription = (customer, request, response) => {
       account: request.user.id,
       subscription_id: stripeSubscription.id
     })
-
-    console.log(subscription);
     
     return subscription.save()
   })
@@ -60,7 +57,6 @@ exports.addSubscription = (customer, request, response) => {
     response.status(500).json(error)
   })
 }
-
 
 exports.stripeUserUpdated = (request, response) => {
   stripe.subscriptions.create({

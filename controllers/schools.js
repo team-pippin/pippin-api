@@ -28,7 +28,6 @@ exports.postNewSchool = (request, response) => {
   school.save()
   .then(school => {
     newSchool = school
-    // response.status(201).json(school)
     return setUserRole(owner, school.id)
   })
   .then(() => {

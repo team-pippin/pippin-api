@@ -28,6 +28,12 @@ exports.isAuthorized = (request, response, next) => {
   : response.status(403).json({ error: 'Unauthorized' })
 }
 
+// Are they able to pay $
+exports.canAddSchool = (request, response, next) => {
+  /// check if user is in customers
+  return next()
+}
+
 // Are they authorized to Edit school data?
 exports.canEditSchool = (request, response, next) => {
   let schoolId = request.params.schoolId

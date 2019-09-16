@@ -12,7 +12,23 @@ exports.getAllSchools = (request, response) => {
 }
 
 exports.postNewSchool = (request, response) => {
-  
+  let owner = request.user.id
+  const { name, city, state } = request.body;
+  let school = new School({
+    name,
+    city,
+    state,
+    owner
+  })
+
+  school.save()
+  .then(school => {
+    response.status(201).json(school)
+  })
+  .catch(error => {
+    console.log(error);
+    response.status(500).json(error)
+  })
 }
 
 exports.getSchoolById = (request, response) => {

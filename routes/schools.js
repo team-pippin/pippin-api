@@ -9,7 +9,7 @@ const express = require('express'),
 router.get('/', auth.isAuthenticated, auth.canReadSchool, school.getAllSchools);
 router.get('/:schoolId', auth.isAuthenticated, auth.canReadSchool, school.getSchoolById);
 
-router.post('/', auth.isAuthenticated, auth.canEditSchool, school.postNewSchool);
+router.post('/', auth.isAuthenticated, auth.canAddSchool, school.postNewSchool);
 router.put('/:schoolId', auth.isAuthenticated, auth.canEditSchool, school.putSchoolById);
 
 router.use('/:schoolId/articles', articles);

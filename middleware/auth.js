@@ -83,7 +83,7 @@ exports.canReadSchool = (request, response, next) => {
         if (!schoolRole) {
           return response.status(403).json({ error: 'Unauthorized' })
         } else {              
-          return schoolRole.role == 'SUBSCRIBER' || schoolRole.role == 'EDITOR' || schoolRole.role == 'ADMIN' 
+          return schoolRole.role == 'SUBSCRIBER' || schoolRole.role == 'EDITOR' || schoolRole.role == 'ADMIN'
           ? next()
           : response.status(403).json({ error: 'Unauthorized' })
         }

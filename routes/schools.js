@@ -6,8 +6,8 @@ const express = require('express'),
   auth = require('../middleware/auth'),
   router = express.Router();
 
-router.get('/', school.getAllSchools);
-router.post('/', school.postNewSchool);
+router.get('/', auth.canReadSchool, school.getAllSchools);
+router.post('/', auth.canEditSchool, school.postNewSchool);
 
 router.get('/:schoolId', auth.canReadSchool, school.getSchoolById);
 router.put('/:schoolId', school.putSchoolById);

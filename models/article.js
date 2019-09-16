@@ -10,12 +10,12 @@ let article = new Schema({
     type: String,
     required: false
   },
-  pubDate: {
+  publishedDate: {
     type: Date,
     required: true,
     default:  Date.now
   },
-  story: {
+  body: {
     type: String,
     required: 'News story cannot be blank'
   },
@@ -26,6 +26,16 @@ let article = new Schema({
   title: {
     type: String,
     required: 'News Story needs title'
+  },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'Account',
+    required: true
+  },
+  school: {
+    type: Schema.Types.ObjectId,
+    ref: 'School',
+    required: true
   }
 });
 

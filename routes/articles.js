@@ -1,12 +1,13 @@
 const express = require('express'),
   articles = require('../controllers/articles'),
+  auth = require('../middleware/auth'),
   router = express.Router({ mergeParams: true })
 
-router.get('/', articles.getNews);
-router.post('/', articles.createNewsArticle)
+router.get('/', auth.canReadSchool, articles.getNews);
+router.post('/', auth.canEditSchool, articles.createNewsArticle)
 
-router.get('/:newsId', articles.getNewsById);
-router.put('/:newsId', articles.updateNewsById)
-router.delete('/:newsId', articles.deleteNewsById);
+router.get('/:articleId', auth.canReadSchool, articles.getNewsById);
+router.put('/:articleId', auth.canEditSchool, articles.updateNewsById)
+router.delete('/:articleId', auth.canEditSchool, articles.deleteNewsById);
 
 module.exports = router;

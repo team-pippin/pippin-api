@@ -14,13 +14,23 @@ let event = new Schema({
     type: Date,
     required: false
   },
-  description: {
+  body: {
     type: String,
     required: 'Description cannot be blank'
   },
   title: {
     type: String,
     required: 'Event needs title'
+  },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'Account',
+    required: true
+  },
+  school: {
+    type: Schema.Types.ObjectId,
+    ref: 'School',
+    required: true
   }
 });
 

@@ -4,6 +4,8 @@ const Account = require('./account'),
   Event = require('./event'),
   School = require('./school'),
   AppConfig = require('./appConfig'),
+  StripeCustomer = require('./stripe-customer'),
+  CustomerSubscription = require('./customer-subscription'),
   mongoose = require("mongoose");
   
 mongoose.set('debug', true);
@@ -16,5 +18,7 @@ module.exports = {
   Article,
   Event,
   School,
-  AppConfig
+  AppConfig,
+  StripeCustomer,
+  CustomerSubscription
  }

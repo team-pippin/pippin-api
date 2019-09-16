@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.STRIPE_KEY),
+const stripe = require('../util/stripe'),
   { StripeCustomer, CustomerSubscription } = require('../models');
 
 // Need stripe customer_id to create invoices and verify that I can add school

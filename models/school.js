@@ -14,6 +14,10 @@ var school = new mongoose.Schema({
     type: String,
     required: 'State cannot be blank'
   },
+  postalCode: {
+    type: String,
+    required: true
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'Account',

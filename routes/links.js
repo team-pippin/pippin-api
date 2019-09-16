@@ -1,5 +1,6 @@
 const express = require('express'),
   links = require('../controllers/links'),
+  auth = require('../middleware/auth'),
   router = express.Router({ mergeParams: true });
 
 router.get('/', auth.isAuthenticated, auth.canReadSchool, links.getLinks);

@@ -1,4 +1,4 @@
-const { Account } = require('../models'),
+const { Account, StripeCustomer } = require('../models'),
   jwt = require('jsonwebtoken');
 
 // Does user have token?
@@ -28,10 +28,22 @@ exports.isAuthorized = (request, response, next) => {
   : response.status(403).json({ error: 'Unauthorized' })
 }
 
-// Are they able to pay $
+// Are they able to pay $ ??
 exports.canAddSchool = (request, response, next) => {
-  /// check if user is in customers
-  return next()
+  let account = request.user.id;
+
+  StripeCustomer.findOne(account)
+  .then(customer => {
+    if (!customer) {
+      return response.status(403).json({ error: 'Unauthorized' })
+    } else {
+      return next()
+    }
+  })
+  .catch(error => {
+    console.log(error);
+    return response.status(403).json({ error: 'Unauthorized' })
+  })
 }
 
 // Are they authorized to Edit school data?

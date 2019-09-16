@@ -3,11 +3,11 @@ const express = require('express'),
   auth = require('../middleware/auth'),
   router = express.Router({ mergeParams: true });
 
-router.get('/', auth.canReadSchool, events.getEvents);
-router.post('/', auth.canEditSchool, events.createEvent)
+router.get('/', auth.isAuthenticated, auth.canReadSchool, events.getEvents);
+router.get('/:eventId', auth.isAuthenticated, auth.canReadSchool, events.getEventById);
 
-router.get('/:eventId', auth.canReadSchool, events.getEventById);
-router.put('/:eventId', auth.canEditSchool, events.updateEventById)
-router.delete('/:eventId', auth.canEditSchool, events.deleteEventById);
+router.post('/', auth.isAuthenticated, auth.canEditSchool, events.createEvent)
+router.put('/:eventId', auth.isAuthenticated, auth.canEditSchool, events.updateEventById)
+router.delete('/:eventId', auth.isAuthenticated, auth.canEditSchool, events.deleteEventById);
 
 module.exports = router;

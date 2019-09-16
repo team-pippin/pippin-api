@@ -6,11 +6,11 @@ const express = require('express'),
   auth = require('../middleware/auth'),
   router = express.Router();
 
-router.get('/', auth.canReadSchool, school.getAllSchools);
-router.post('/', auth.canEditSchool, school.postNewSchool);
+router.get('/', auth.isAuthenticated, auth.canReadSchool, school.getAllSchools);
+router.get('/:schoolId', auth.isAuthenticated, auth.canReadSchool, school.getSchoolById);
 
-router.get('/:schoolId', auth.canReadSchool, school.getSchoolById);
-router.put('/:schoolId', school.putSchoolById);
+router.post('/', auth.isAuthenticated, auth.canEditSchool, school.postNewSchool);
+router.put('/:schoolId', auth.isAuthenticated, auth.canEditSchool, school.putSchoolById);
 
 router.use('/:schoolId/articles', articles);
 router.use('/:schoolId/links', links);

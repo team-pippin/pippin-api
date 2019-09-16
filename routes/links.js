@@ -2,10 +2,10 @@ const express = require('express'),
   links = require('../controllers/links'),
   router = express.Router({ mergeParams: true });
 
-router.get('/', links.getLinks);
-router.post('/', links.createLink)
+router.get('/', auth.isAuthenticated, auth.canReadSchool, links.getLinks);
+router.post('/', auth.isAuthenticated, auth.canEditSchool,links.createLink)
 
-router.put('/:linkId', links.updateLinkById)
-router.delete('/:linkId', links.deleteLinkById);
+router.put('/:linkId', auth.isAuthenticated, auth.canEditSchool, links.updateLinkById)
+router.delete('/:linkId', auth.isAuthenticated, auth.canEditSchool, links.deleteLinkById);
 
 module.exports = router;

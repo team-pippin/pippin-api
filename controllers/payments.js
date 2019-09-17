@@ -1,4 +1,4 @@
-const stripe = require('../util/stripe'),
+const { stripe } = require('../util/stripe'),
   { StripeCustomer, CustomerSubscription } = require('../models');
 
 exports.addPaymentMethod = (request, response) => {

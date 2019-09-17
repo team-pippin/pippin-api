@@ -10,7 +10,7 @@ exports.isAuthenticated = (request, response, next) => {
   }
 
   jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
-    if (decoded && decoded.id === request.params.userId) {
+    if (decoded && decoded.id) {
       request.user = decoded
       return next();
     } else if (error) {
@@ -32,9 +32,12 @@ exports.isAuthorized = (request, response, next) => {
 exports.canAddSchool = (request, response, next) => {
   let account = request.user.id;
 
-  StripeCustomer.findOne(account)
+  StripeCustomer.findOne({account})
   .then(customer => {
     if (!customer) {
+      console.log(customer);
+      console.log(account);
+      
       return response.status(403).json({ error: 'Unauthorized' })
     } else {
       return next()

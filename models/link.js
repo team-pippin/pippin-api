@@ -1,15 +1,15 @@
-const mongoose = require('mongoose'),
- Schema = mongoose.Schema;
+const mongoose = require("mongoose"),
+  Schema = mongoose.Schema;
 
 let link = new Schema({
   linkUrl: {
     type: String,
-    required: 'Link needs a url'
+    required: "Link needs a url"
   },
   title: {
     type: String,
-    required: 'Link needs a title'
+    required: "Link needs a title"
   }
 });
 
-module.exports = mongoose.model('Link', link);
+module.exports = mongoose.model("Link", link);

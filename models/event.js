@@ -1,14 +1,14 @@
-const mongoose = require('mongoose'),
- Schema = mongoose.Schema;
+const mongoose = require("mongoose"),
+  Schema = mongoose.Schema;
 
 let event = new Schema({
   location: {
     type: String,
-    required: 'Event needs a location'
+    required: "Event needs a location"
   },
   startDate: {
     type: Date,
-    required: 'Event needs start date'
+    required: "Event needs start date"
   },
   endDate: {
     type: Date,
@@ -16,22 +16,22 @@ let event = new Schema({
   },
   body: {
     type: String,
-    required: 'Description cannot be blank'
+    required: "Description cannot be blank"
   },
   title: {
     type: String,
-    required: 'Event needs title'
+    required: "Event needs title"
   },
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'Account',
+    ref: "Account",
     required: true
   },
   school: {
     type: Schema.Types.ObjectId,
-    ref: 'School',
+    ref: "School",
     required: true
   }
 });
 
-module.exports = mongoose.model('Event', event);
+module.exports = mongoose.model("Event", event);

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose'),
- Schema = mongoose.Schema;
+const mongoose = require("mongoose"),
+  Schema = mongoose.Schema;
 
 let article = new Schema({
   imgUrl: {
@@ -13,30 +13,30 @@ let article = new Schema({
   publishedDate: {
     type: Date,
     required: true,
-    default:  Date.now
+    default: Date.now
   },
   body: {
     type: String,
-    required: 'News story cannot be blank'
+    required: "News story cannot be blank"
   },
   subtitle: {
     type: String,
-    required: 'News Story needs subtitle'
+    required: "News Story needs subtitle"
   },
   title: {
     type: String,
-    required: 'News Story needs title'
+    required: "News Story needs title"
   },
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'Account',
+    ref: "Account",
     required: true
   },
   school: {
     type: Schema.Types.ObjectId,
-    ref: 'School',
+    ref: "School",
     required: true
   }
 });
 
-module.exports = mongoose.model('NewsArticle', article);
+module.exports = mongoose.model("NewsArticle", article);

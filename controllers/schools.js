@@ -6,20 +6,17 @@ const {
   } = require("../models"),
   { stripe } = require("../util/stripe");
 
-exports.getAllSchools = (request, response) => {
-  School.find()
-    .then(schools => {
-      response.status(200).json(schools);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
-    });
+exports.getAllSchools = async (request, response) => {
+  try {
+    const schools = await School.find();
+    response.status(200).json(schools);
+  } catch (error) {
+    response.status(500).json(error);
+  }
 };
 
-exports.postNewSchool = (request, response) => {
+exports.postNewSchool = async (request, response) => {
   let owner = request.user.id;
-  let newSchool;
 
   const { name, city, state, postalCode } = request.body;
   let school = new School({
@@ -30,34 +27,19 @@ exports.postNewSchool = (request, response) => {
     owner
   });
 
-  school
-    .save()
-    .then(school => {
-      newSchool = school;
-      return setUserRole(owner, school.id);
-    })
-    .then(account => {
-      return setUserUsage(account.id);
-    })
-    .then(subscription => {
-      return setStripeUsage(subscription);
-    })
-    .then(() => {
-      return getStripeCustomer(owner);
-    })
-    .then(customer => {
-      return createInvoice(customer.customer_id);
-    })
-    .then(invoice => {
-      return finalizeInvoice(invoice);
-    })
-    .then(() => {
-      return response.status(201).json(newSchool);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
-    });
+  try {
+    const savedSchool = await school.save();
+    const account = await setUserRole(owner, school.id);
+    const subscription = setUserUsage(account.id);
+    await setStripeUsage(subscription);
+    const customer = await getStripeCustomer(owner);
+    const invoice = await createInvoice(customer.customer_id);
+    await finalizeInvoice(invoice);
+    return response.status(201).json(savedSchool);
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
 };
 
 const setUserRole = (userId, school) => {
@@ -94,15 +76,14 @@ const finalizeInvoice = invoice => {
   return stripe.invoices.finalizeInvoice(invoice.id, { auto_advance: true });
 };
 
-exports.getSchoolById = (request, response) => {
-  School.findById(request.params.schoolId)
-    .then(school => {
-      response.status(200).json(school);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
-    });
+exports.getSchoolById = async (request, response) => {
+  try {
+    const school = await School.findById(request.params.schoolId);
+    response.status(200).json(error);
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
 };
 
 exports.putSchoolById = (request, response) => {};

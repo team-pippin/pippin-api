@@ -1,67 +1,54 @@
 const { Account, School, Article } = require("../models");
 
-exports.getNews = (request, response) => {
-  Article.find({ school: request.params.schoolId })
-    .populate("school")
-    .then(news => {
-      response.status(200).json(news);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
-    });
+exports.getNews = async (request, response) => {
+  try {
+    const news = await Article.find({
+      school: request.params.schoolId
+    }).populate("school");
+    response.status(200).json(news);
+  } catch (error) {
+    response.status(500).json(error);
+  }
 };
 
-exports.createNewsArticle = (request, response) => {
-  let userId = request.user.id; // User Token
-  let schoolId = request.params.schoolId;
-  let author;
-
-  Account.findById(userId)
-    .then(account => {
-      author = account;
-      return School.findById(schoolId);
-    })
-    .then(school => {
-      let article = createArticle(author, school, request);
-      return article.save();
-    })
-    .then(() => {
-      return this.getNews(request, response);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
-    });
+exports.createNewsArticle = async (request, response) => {
+  try {
+    const schoolId = request.params.schoolId;
+    const school = await School.findById(schoolId);
+    const article = createArticle(school, request);
+    await article.save();
+    return await this.getNews(request, response);
+  } catch (error) {
+    response.status(500).json(error);
+  }
 };
 
-exports.getNewsById = (request, response) => {
-  let articleId = request.params.articleId;
-  Article.findById(articleId)
-    .then(article => {
-      response.status(200).json(article);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
-    });
+exports.getNewsById = async (request, response) => {
+  try {
+    const articleId = request.params.articleId;
+    const article = await Article.findById(articleId);
+    response.status(200).json(article);
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
 };
 
 exports.updateNewsById = (request, response) => {};
 
-exports.deleteNewsById = (request, response) => {
-  let articleId = request.params.articleId;
-  Article.findByIdAndRemove(articleId)
-    .then(() => {
-      return this.getNews(request, response);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
-    });
+exports.deleteNewsById = async (request, response) => {
+  try {
+    const articleId = request.params.articleId;
+    await Article.findByIdAndRemove(articleId);
+    return await this.getNews(request, response);
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
 };
 
-const createArticle = (author, school, request) => {
+const createArticle = (school, request) => {
+  const author = request.user;
   const { imgUrl, sourceUrl, body, subtitle, title } = request.body;
 
   let article = new Article({

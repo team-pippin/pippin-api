@@ -1,38 +1,34 @@
 const { stripe } = require("../util/stripe"),
   { StripeCustomer, CustomerSubscription } = require("../models");
 
-exports.addPaymentMethod = (request, response) => {
+exports.addPaymentMethod = async (request, response) => {
   const { source, description, email } = request.body; // GET Token
 
-  stripe.customers
-    .create({
+  try {
+    const stripeCustomer = await stripe.customers.create({
       source,
       email,
       description,
       metadata: {
         accountId: request.user.id
       }
-    })
-    .then(stripeCustomer => {
-      let customer = new StripeCustomer({
-        account: request.user.id,
-        customer_id: stripeCustomer.id
-      });
-
-      return customer.save();
-    })
-    .then(customer => {
-      return this.addSubscription(customer, request, response);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
     });
+
+    const customer = await new StripeCustomer({
+      account: request.user.id,
+      customer_id: stripeCustomer.id
+    }).save();
+
+    return await this.addSubscription(customer, request, response);
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
 };
 
-exports.addSubscription = (customer, request, response) => {
-  stripe.subscriptions
-    .create({
+exports.addSubscription = async (customer, request, response) => {
+  try {
+    const stripeSubscription = await stripe.subscriptions.create({
       customer: customer.customer_id,
       items: [
         {
@@ -40,29 +36,23 @@ exports.addSubscription = (customer, request, response) => {
           quantity: 0
         }
       ]
-    })
-    .then(stripeSubscription => {
-      let subscription = new CustomerSubscription({
-        account: request.user.id,
-        subscription_id: stripeSubscription.id
-      });
-
-      return subscription.save();
-    })
-    .then(subscription => {
-      console.log(subscription);
-
-      return response.status(201).json({ customer, subscription });
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
     });
+
+    const subscription = await new CustomerSubscription({
+      account: request.user.id,
+      subscription_id: stripeSubscription.id
+    }).save();
+
+    return response.status(201).json({ customer, subscription });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
 };
 
-exports.stripeUserUpdated = (request, response) => {
-  stripe.subscriptions
-    .create({
+exports.stripeUserUpdated = async (request, response) => {
+  try {
+    const newSubscription = await stripe.subscriptions.create({
       customer: customer.customer_id,
       items: [
         {
@@ -70,20 +60,15 @@ exports.stripeUserUpdated = (request, response) => {
           quantity: 0
         }
       ]
-    })
-    .then(newSubscription => {
-      console.log(newSubscription);
-
-      let subscription = new CustomerSubscription({
-        ...newSubscription,
-        subscription_id: newSubscription.id
-      });
-      return subscription.save();
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).json(error);
     });
+
+    return await new CustomerSubscription({
+      ...newSubscription,
+      subscription_id: newSubscription.id
+    }).save();
+  } catch (error) {
+    response.status(500).json(error);
+  }
 };
 
 module.exports = exports;

@@ -6,7 +6,7 @@ const express = require("express"),
   auth = require("../middleware/auth"),
   router = express.Router();
 
-router.get("/", auth.isAuthenticated, auth.canReadSchool, school.getAllSchools);
+router.get("/", auth.isAuthenticated, school.getAllSchools);
 router.get(
   "/:schoolId",
   auth.isAuthenticated,

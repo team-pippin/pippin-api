@@ -13,6 +13,14 @@ router.get(
   auth.isAuthorized,
   accounts.getUser
 );
+
+router.get(
+  "/:userId/school-subscriptions",
+  auth.isAuthenticated,
+  auth.isAuthorized,
+  accounts.getUserSubscribedSchools
+);
+
 router.delete(
   "/:userId",
   auth.isAuthenticated,

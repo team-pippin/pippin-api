@@ -79,7 +79,7 @@ const finalizeInvoice = invoice => {
 exports.getSchoolById = async (request, response) => {
   try {
     const school = await School.findById(request.params.schoolId);
-    response.status(200).json(error);
+    response.status(200).json(school);
   } catch (error) {
     console.log(error);
     response.status(500).json(error);

@@ -2,13 +2,14 @@ const { stripe } = require("../util/stripe"),
   { StripeCustomer, CustomerSubscription } = require("../models");
 
 exports.addPaymentMethod = async (request, response) => {
-  const { source, description, email } = request.body; // GET Token
+  const { source } = request.body; // GET Token
 
+  // TODO: - Check to see if the customer has already been created
   try {
     const stripeCustomer = await stripe.customers.create({
-      source,
-      email,
-      description,
+      source: source,
+      email: request.user.email,
+      description: request.user.name,
       metadata: {
         accountId: request.user.id
       }

@@ -30,7 +30,7 @@ exports.postNewSchool = async (request, response) => {
   try {
     const savedSchool = await school.save();
     const account = await setUserRole(owner, school.id);
-    const subscription = setUserUsage(account.id);
+    const subscription = await setUserUsage(account.id);
     await setStripeUsage(subscription);
     const customer = await getStripeCustomer(owner);
     const invoice = await createInvoice(customer.customer_id);
@@ -44,7 +44,7 @@ exports.postNewSchool = async (request, response) => {
 
 const setUserRole = (userId, school) => {
   const role = { school, role: "ADMIN" };
-  return Account.findByIdAndUpdate(userId, { $push: { roles: role } });
+  return Account.findByIdAndUpdate(userId, { $push: { roles: role } }).exec();
 };
 
 const setUserUsage = userId => {

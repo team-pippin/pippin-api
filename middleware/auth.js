@@ -37,7 +37,7 @@ exports.canAddSchool = async (request, response, next) => {
   let id = request.user.id;
 
   try {
-    const customer = await StripeCustomer.findOne({ id });
+    const customer = await StripeCustomer.findOne({ account: id }).exec();
     if (!customer) {
       return response.status(403).json({ error: "Unauthorized" });
     } else {

@@ -6,15 +6,6 @@ const {
   } = require("../models"),
   { stripe } = require("../util/stripe");
 
-exports.getAllSchools = async (request, response) => {
-  try {
-    const schools = await School.find();
-    response.status(200).json(schools);
-  } catch (error) {
-    response.status(500).json(error);
-  }
-};
-
 exports.postNewSchool = async (request, response) => {
   let owner = request.user.id;
 
@@ -86,6 +77,27 @@ exports.getSchoolById = async (request, response) => {
   }
 };
 
+exports.querySchoolList = async (request, response) => {
+  const query = request.query["name"];
+
+  if (!query || (query === "" && query.length < 3)) {
+    response.status(500).json({ error: "Invalid search query" });
+    return;
+  }
+
+  const searchKey = new RegExp(escapeRegex(query), "gi");
+  try {
+    const schools = await School.find({ name: searchKey }).exec();
+    response.status(200).json(schools);
+  } catch (error) {
+    response.status(500).json(error);
+  }
+};
+
 exports.putSchoolById = (request, response) => {};
+
+const escapeRegex = text => {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = exports;

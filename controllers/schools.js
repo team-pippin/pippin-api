@@ -81,7 +81,7 @@ exports.querySchoolList = async (request, response) => {
   const query = request.query["name"];
 
   if (!query || (query === "" && query.length < 3)) {
-    response.status(500).json({ error: "Invalid search query" });
+    response.status(200).json([]);
     return;
   }
 

@@ -21,6 +21,13 @@ router.get(
   accounts.getUserSubscribedSchools
 );
 
+router.get(
+  "/:userId/managed-schools",
+  auth.isAuthenticated,
+  auth.isAuthorized,
+  accounts.getManagedSchools
+);
+
 router.delete(
   "/:userId",
   auth.isAuthenticated,

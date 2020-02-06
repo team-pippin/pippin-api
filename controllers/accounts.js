@@ -57,6 +57,26 @@ exports.getUserSubscribedSchools = async (request, response) => {
   }
 };
 
+exports.getManagedSchools = async (request, response) => {
+  const account = request.user;
+  const schoolIds = account.roles
+    .filter(role => role.role == "ADMIN" || role.role == "EDITOR")
+    .map(role => role.school);
+
+  try {
+    const schools = [];
+
+    await asyncForEach(schoolIds, async id => {
+      const school = await School.findById(id);
+      schools.push(school);
+    });
+
+    response.status(200).json(schools);
+  } catch (error) {
+    response.status(500).json(error);
+  }
+};
+
 // https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
 async function asyncForEach(array, callback) {
   for (let index = 0; index < array.length; index++) {

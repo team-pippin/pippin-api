@@ -4,7 +4,7 @@ exports.getNews = async (request, response) => {
   try {
     const news = await Article.find({
       school: request.params.schoolId
-    }).populate("school");
+    }).populate("author");
     response.status(200).json(news);
   } catch (error) {
     response.status(500).json(error);
